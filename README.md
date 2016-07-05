@@ -22,19 +22,18 @@ dependencies:
 
 #### Template directory structure
 
-* /path/to/template/
-  * spec/
-    * .gitignore
-    * spec_helper.cr.ecr
-    * {{file}}_spec.cr.ecr
-  * src/
-    * {{file}}/
-      * version.cr.ecr
-    * {{file}}.cr.ecr
-  * .travis.uml
-  * LICENSE.ecr
-  * README.md.ecr
-  * shard.yml.ecr
+* spec/
+  * .gitignore
+  * spec_helper.cr.ecr
+  * {{file}}_spec.cr.ecr
+* src/
+  * {{file}}/
+    * version.cr.ecr
+  * {{file}}.cr.ecr
+* .travis.uml
+* LICENSE.ecr
+* README.md.ecr
+* shard.yml.ecr
 
 #### Template file example
 
@@ -74,19 +73,18 @@ CrystalInitTemplate.new("/path/to/output", "teeplate", "Teeplate", "mosop", 2016
 
 #### Output directory structure
 
-* /path/to/output/
-  * spec/
-    * .gitignore
-    * spec_helper.cr
-    * teeplate_spec.cr
-  * src/
-    * teeplate/
-      * version.cr
-    * teeplate.cr
-  * .travis.uml
-  * LICENSE
-  * README.md
-  * shard.yml
+* spec/
+  * .gitignore
+  * spec_helper.cr
+  * teeplate_spec.cr
+* src/
+  * teeplate/
+    * version.cr
+  * teeplate.cr
+* .travis.uml
+* LICENSE
+* README.md
+* shard.yml
 
 #### Output example
 
