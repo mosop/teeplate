@@ -1,5 +1,4 @@
 require "../../teeplate"
-require "ecr"
 require "base64"
 
 def each_file(path, &block : (String ->))
@@ -30,7 +29,7 @@ each_file(dir) do |f|
     local_name = $1
     puts <<-EOS
       def __ecr#{i}(__io)
-        {{ run("ecr/process", #{f.inspect}, "__io") }}
+        ::ECR.embed #{f.inspect}, "__io"
       end
       EOS
     try_to_write_files_body << <<-EOS

@@ -1,5 +1,5 @@
 require "base64"
-require "ecr"
+require "ecr/macros"
 
 module Teeplate
   abstract class FileTree
