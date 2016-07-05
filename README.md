@@ -86,7 +86,7 @@ CrystalInitTemplate.new("/path/to/output", "teeplate", "Teeplate", "mosop", 2016
 * README.md
 * shard.yml
 
-#### Output example
+#### Output file example
 
 ```yaml
 # shard.yml
