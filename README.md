@@ -52,7 +52,7 @@ license: MIT
 
 ```crystal
 class CrystalInitTemplate < Teeplate::FileTree
-  directory "/path/to/template"
+  directory "#{__DIR__}/path/to/template"
 
   @file : String
   @class : String
