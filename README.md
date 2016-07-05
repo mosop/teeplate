@@ -30,7 +30,7 @@ dependencies:
   * {{file}}/
     * version.cr.ecr
   * {{file}}.cr.ecr
-* .travis.uml
+* .travis.yml
 * LICENSE.ecr
 * README.md.ecr
 * shard.yml.ecr
@@ -81,7 +81,7 @@ CrystalInitTemplate.new("/path/to/output", "teeplate", "Teeplate", "mosop", 2016
   * teeplate/
     * version.cr
   * teeplate.cr
-* .travis.uml
+* .travis.yml
 * LICENSE
 * README.md
 * shard.yml
