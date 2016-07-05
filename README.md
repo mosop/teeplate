@@ -107,7 +107,7 @@ require "teeplate"
 
 and see [Features](#features)
 
-# Wish List
+## Wish List
 
 * Confirmation (Overwrite, Abort, Ignore...)
 
