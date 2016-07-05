@@ -1,0 +1,12 @@
+name: teeplate
+version: 0.1.0
+
+authors:
+  - mosop <mosop@a.b.com>
+
+dependencies:
+  have_files:
+    github: mosop/have_files
+    version: ~> 0.2.1
+
+license: MIT
