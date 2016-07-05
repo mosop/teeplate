@@ -2,6 +2,8 @@
 
 A Crystal library for generating files from templates.
 
+[![Build Status](https://travis-ci.org/mosop/teeplate.svg?branch=master)](https://travis-ci.org/mosop/teeplate)
+
 ## Installation
 
 Add this to your application's `shard.yml`:
@@ -67,12 +69,12 @@ end
 #### Here we go!
 
 ```crystal
-CrystalInitTemplate.new("/path/to/repo", "teeplate", "Teeplate", "mosop", 2016).render
+CrystalInitTemplate.new("/path/to/output", "teeplate", "Teeplate", "mosop", 2016).render
 ```
 
 #### Output directory structure
 
-* /path/to/template/
+* /path/to/output/
   * spec/
     * .gitignore
     * spec_helper.cr
