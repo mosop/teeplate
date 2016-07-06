@@ -8,5 +8,8 @@ dependencies:
   have_files:
     github: mosop/have_files
     version: ~> 0.2.1
+  stdio:
+    github: mosop/stdio
+    version: ~> 0.1.2
 
 license: MIT

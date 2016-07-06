@@ -111,6 +111,8 @@ license: MIT
 
 ### Forced
 
+If a file already exists, Teeplate skips rendering the file. To force overwriting, set the `:force` option:
+
 ```crystal
 class Template < Teeplate::FileTree
   directory "/path/to/template"
@@ -127,14 +129,24 @@ Template.new("/path/to/output", ":(").render(force: true) # files to be overwrit
 Template.new("/path/to/output", ":P").render # nothing happens
 ```
 
-### Interactive (WIP)
+### Interactive
+
+If the `:interactive` option is true, Teeplate prompts us to select whether to overwrite an existing file.
+
+```
+shard.yml already exists...
+O(overwrite)/K(keep) ?
+```
 
 ## Wish List
 
-* Confirmation (Overwrite, Abort, Ignore...)
+* Diff option on overwriting
+* Listing rendered files (colorized)
 
 ## Release Notes
 
+* v0.1.3
+  * :interactive option to select whether to overwrite existing files
 * v0.1.2
   * :force option to overwrite output files if they exist
 
