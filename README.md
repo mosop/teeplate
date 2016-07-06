@@ -1,6 +1,6 @@
 # Teeplate
 
-A Crystal library for generating files from templates.
+A Crystal library for rendering multiple files from templates.
 
 [![Build Status](https://travis-ci.org/mosop/teeplate.svg?branch=master)](https://travis-ci.org/mosop/teeplate)
 
@@ -14,13 +14,21 @@ dependencies:
     github: mosop/teeplate
 ```
 
-## Features
+## Supported Template Engines
 
-<a name="features"></a>
+* ECR
 
-### File Tree Template
+## Usage
 
-#### Template directory structure
+```crystal
+require "teeplate"
+```
+
+## Example
+
+Let's make our `crystal init` template.
+
+#### Template structure
 
 * spec/
   * .gitignore
@@ -71,7 +79,7 @@ end
 CrystalInitTemplate.new("/path/to/output", "teeplate", "Teeplate", "mosop", 2016).render
 ```
 
-#### Output directory structure
+#### Output structure
 
 * spec/
   * .gitignore
@@ -86,7 +94,7 @@ CrystalInitTemplate.new("/path/to/output", "teeplate", "Teeplate", "mosop", 2016
 * README.md
 * shard.yml
 
-#### Output file example
+#### Output example
 
 ```yaml
 # shard.yml
@@ -99,17 +107,36 @@ authors:
 license: MIT
 ```
 
-## Usage
+## Overwriting
+
+### Forced
 
 ```crystal
-require "teeplate"
+class Template < Teeplate::FileTree
+  directory "/path/to/template"
+
+  @face : String
+
+  def initialize(out_dir, @face)
+    super out_dir
+  end
+end
+
+Template.new("/path/to/output", ":)").render
+Template.new("/path/to/output", ":(").render(force: true) # files to be overwritten
+Template.new("/path/to/output", ":P").render # nothing happens
 ```
 
-and see [Features](#features)
+### Interactive (WIP)
 
 ## Wish List
 
 * Confirmation (Overwrite, Abort, Ignore...)
+
+## Release Notes
+
+* v0.1.2
+  * :force option to overwrite output files if they exist
 
 ## Contributing
 

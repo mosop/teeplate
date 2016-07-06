@@ -36,14 +36,14 @@ each_file(dir) do |f|
         io = ::MemoryIO.new
         __ecr#{i}(io)
         io.rewind
-        __try_to_write "#{local_name}", io
+        __try_to_write "#{local_name}", io, force
       EOS
   else
     io = MemoryIO.new
     File.open(f){|f| IO.copy(f, io)}
     base64 = Base64.encode(io)
     try_to_write_files_body << <<-EOS
-        __try_to_write "#{local_name}", ::Base64.decode(#{base64.inspect})
+        __try_to_write "#{local_name}", ::Base64.decode(#{base64.inspect}), force
       EOS
   end
 
@@ -51,7 +51,7 @@ each_file(dir) do |f|
 end
 
 puts <<-EOS
-  def __try_to_write_files
+  def __try_to_write_files(force)
   #{try_to_write_files_body.join("\n")}
   end
   EOS
