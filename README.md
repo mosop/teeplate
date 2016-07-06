@@ -1,6 +1,6 @@
 # Teeplate
 
-A Crystal library for rendering multiple files from templates.
+A Crystal library for rendering multiple template files.
 
 [![Build Status](https://travis-ci.org/mosop/teeplate.svg?branch=master)](https://travis-ci.org/mosop/teeplate)
 
