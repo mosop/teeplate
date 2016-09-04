@@ -26,7 +26,7 @@ module TeeplateOverwritingInteractiveFeature
           fork do
             prompt = ""
             loop do
-              if ch = io.out?.read_char
+              if ch = io.out!.read_char
                 prompt += ch
                 break if prompt.ends_with?(Teeplate::FileTree::PROMPT)
               else
@@ -42,7 +42,7 @@ module TeeplateOverwritingInteractiveFeature
           fork do
             prompt = ""
             loop do
-              if ch = io.out?.read_char
+              if ch = io.out!.read_char
                 prompt += ch
                 break if prompt.ends_with?(Teeplate::FileTree::PROMPT)
               else
