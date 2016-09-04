@@ -7,7 +7,7 @@ authors:
 dependencies:
   have_files:
     github: mosop/have_files
-    version: ~> 0.2.1
+    version: ~> 0.3.0
   stdio:
     github: mosop/stdio
     version: ~> 0.1.2
