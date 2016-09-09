@@ -31,13 +31,13 @@ Let's make our `crystal init` template.
 #### Template structure
 
 * spec/
-  * .gitignore
   * spec_helper.cr.ecr
   * {{file}}_spec.cr.ecr
 * src/
   * {{file}}/
     * version.cr.ecr
   * {{file}}.cr.ecr
+* .gitignore
 * .travis.yml
 * LICENSE.ecr
 * README.md.ecr
@@ -82,13 +82,13 @@ CrystalInitTemplate.new("/path/to/output", "teeplate", "Teeplate", "mosop", 2016
 #### Output structure
 
 * spec/
-  * .gitignore
   * spec_helper.cr
   * teeplate_spec.cr
 * src/
   * teeplate/
     * version.cr
   * teeplate.cr
+* .gitignore
 * .travis.yml
 * LICENSE
 * README.md
