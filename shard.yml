@@ -4,7 +4,7 @@ version: 0.1.4
 authors:
   - mosop <mosop@a.b.com>
 
-dependencies:
+development_dependencies:
   have_files:
     github: mosop/have_files
     version: ~> 0.3.0
