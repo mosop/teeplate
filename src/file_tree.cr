@@ -39,8 +39,8 @@ module Teeplate
         end
 
         def overwrites?
-          return false unless changed?
           return true if @rendering.forces? || @rendering.overwrite_all?
+          return false unless changed?
           !@rendering.keep_all? && @rendering.interactive? && confirm_overwriting
         end
 
