@@ -118,8 +118,7 @@ class Template < Teeplate::FileTree
 
   @face : String
 
-  def initialize(out_dir, @face)
-    super out_dir
+  def initialize(@face)
   end
 end
 
