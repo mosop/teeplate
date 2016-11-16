@@ -1,8 +1,8 @@
 name: teeplate
-version: 0.2.0
+version: 0.2.1
 
 authors:
-  - mosop <mosop@a.b.com>
+  - mosop
 
 development_dependencies:
   have_files:
