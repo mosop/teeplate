@@ -8,14 +8,13 @@ module TeeplateVariableDirectoryFeature
 
     @var : String
 
-    def initialize(out_dir, @var)
-      super out_dir
+    def initialize(@var)
     end
   end
 
   it name do
     HaveFiles.tmpdir do |tmp|
-      Template.new(tmp, "var").render
+      Template.new("var").render(tmp)
       expected_dir = "#{__DIR__}/variable_directory/expected"
       tmp.should have_files expected_dir
     end

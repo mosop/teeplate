@@ -11,14 +11,13 @@ module TeeplateFileTreeTemplateFeature
     @author : String
     @year : Int32
 
-    def initialize(out_dir, @file, @class, @author, @year)
-      super out_dir
+    def initialize(@file, @class, @author, @year)
     end
   end
 
   it name do
     HaveFiles.tmpdir do |tmp|
-      Template.new(tmp, "teeplate", "Teeplate", "mosop", 2016).render
+      Template.new("teeplate", "Teeplate", "mosop", 2016).render(tmp)
       expected_dir = "#{__DIR__}/../../test/file_tree_template/expected"
       tmp.should have_files expected_dir
     end

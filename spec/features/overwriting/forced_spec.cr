@@ -8,18 +8,17 @@ module TeeplateOverwritingForcedFeature
 
     @face : String
 
-    def initialize(out_dir, @face)
-      super out_dir
+    def initialize(@face)
     end
   end
 
   it name do
     HaveFiles.tmpdir do |tmp|
       test_path = "#{tmp}/test"
-      Template.new(tmp, ":)").render
-      Template.new(tmp, ":(").render(force: true)
+      Template.new(":)").render(tmp)
+      Template.new(":(").render(tmp, force: true)
       File.read(test_path).should eq ":(\n"
-      Template.new(tmp, ":P").render
+      Template.new(":P").render(tmp)
       File.read(test_path).should eq ":(\n"
     end
   end

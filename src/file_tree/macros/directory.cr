@@ -19,7 +19,7 @@ end
 
 dir = File.expand_path(ARGV[0])
 
-try_to_write_files_body = %w()
+write_body = %w()
 
 i = 0
 each_file(dir) do |f|
@@ -32,18 +32,18 @@ each_file(dir) do |f|
         ::ECR.embed #{f.inspect}, "__io"
       end
       EOS
-    try_to_write_files_body << <<-EOS
+    write_body << <<-EOS
         io = ::MemoryIO.new
         __ecr#{i}(io)
         io.rewind
-        __try_to_write "#{local_name}", io, force, interactive
+        rendering.render "#{local_name}", io
       EOS
   else
     io = MemoryIO.new
     File.open(f){|f| IO.copy(f, io)}
     base64 = Base64.encode(io)
-    try_to_write_files_body << <<-EOS
-        __try_to_write "#{local_name}", ::Base64.decode(#{base64.inspect}), force, interactive
+    write_body << <<-EOS
+        rendering.render "#{local_name}", ::Base64.decode(#{base64.inspect})
       EOS
   end
 
@@ -51,7 +51,7 @@ each_file(dir) do |f|
 end
 
 puts <<-EOS
-  def __try_to_write_files(force, interactive)
-  #{try_to_write_files_body.join("\n")}
+  def __write(rendering)
+  #{write_body.join("\n")}
   end
   EOS

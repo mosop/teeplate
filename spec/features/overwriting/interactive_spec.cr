@@ -4,15 +4,14 @@ require "stdio"
 module TeeplateOverwritingInteractiveFeature
   extend HaveFiles::Spec::Dsl
 
-  PROMPT = "overwrite(o)/keep(k)/diff(d) ? "
+  PROMPT = "overwrite(o)/keep(k)/diff(d)/overwrite all(a)/keep all(n) ? "
 
   class Template < Teeplate::FileTree
     directory "#{__DIR__}/interactive/template"
 
     @face : String
 
-    def initialize(out_dir, @face)
-      super out_dir
+    def initialize(@face)
     end
   end
 
@@ -21,7 +20,7 @@ module TeeplateOverwritingInteractiveFeature
       HaveFiles.tmpdir do |tmp|
         test_path = "#{tmp}/test"
         stdin = STDIN
-        Template.new(tmp, ":)").render
+        Template.new(":)").render(tmp)
         Stdio.capture do |io|
           fork do
             prompt = ""
@@ -35,7 +34,7 @@ module TeeplateOverwritingInteractiveFeature
             end
             io.in.puts "o"
           end
-          Template.new(tmp, ":(").render(interactive: true)
+          Template.new(":(").render(tmp, interactive: true)
         end
         File.read(test_path).should eq ":(\n"
         Stdio.capture do |io|
@@ -51,7 +50,7 @@ module TeeplateOverwritingInteractiveFeature
             end
             io.in.puts "k"
           end
-          Template.new(tmp, ":P").render(interactive: true)
+          Template.new(":P").render(tmp, interactive: true)
         end
         File.read(test_path).should eq ":(\n"
       end
