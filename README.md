@@ -67,8 +67,7 @@ class CrystalInitTemplate < Teeplate::FileTree
   @author : String
   @year : Int32
 
-  def initialize(out_dir, @file, @class, @author, @year)
-    super out_dir
+  def initialize(@file, @class, @author, @year)
   end
 end
 ```
@@ -76,7 +75,7 @@ end
 #### Here we go!
 
 ```crystal
-CrystalInitTemplate.new("/path/to/output", "teeplate", "Teeplate", "mosop", 2016).render
+CrystalInitTemplate.new("teeplate", "Teeplate", "mosop", 2016).render("/path/to/output")
 ```
 
 #### Output structure
@@ -124,9 +123,9 @@ class Template < Teeplate::FileTree
   end
 end
 
-Template.new("/path/to/output", ":)").render
-Template.new("/path/to/output", ":(").render(force: true) # files to be overwritten
-Template.new("/path/to/output", ":P").render # nothing happens
+Template.new(":)").render("/path/to/output")
+Template.new(":(").render("/path/to/output", force: true) # files to be overwritten
+Template.new(":P").render("/path/to/output") # nothing happens
 ```
 
 ### Interactive
@@ -135,16 +134,19 @@ If the `:interactive` option is true, Teeplate prompts us to select whether to o
 
 ```
 shard.yml already exists...
-O(overwrite)/K(keep) ?
+overwrite(o)/keep(k)/diff(d)/overwrite all(a)/keep all(n) ?
 ```
 
-## Wish List
+## Want to Do
 
-* Diff option on overwriting
 * Listing rendered files (colorized)
 
 ## Release Notes
 
+* v0.2.0
+  * (Breaking Change) FileTree#initialize does not receive an output directory. Instead, FileTree#render does.
+  * Diff on overwriting confirmation
+  * Overwrite All / Keep All on overwriting confirmation
 * v0.1.3
   * :interactive option to select whether to overwrite existing files
 * v0.1.2
