@@ -123,7 +123,7 @@ class Template < Teeplate::FileTree
 end
 
 Template.new(":)").render("/path/to/output")
-Template.new(":(").render("/path/to/output", force: true) # files to be overwritten
+Template.new(":(").render("/path/to/output", force: true) # files may be overwritten
 Template.new(":P").render("/path/to/output") # nothing happens
 ```
 
