@@ -4,7 +4,7 @@ require "stdio"
 module TeeplateOverwritingInteractiveFeature
   extend HaveFiles::Spec::Dsl
 
-  PROMPT = "O(overwrite)/K(keep) ? "
+  PROMPT = "overwrite(o)/keep(k)/diff(d) ? "
 
   class Template < Teeplate::FileTree
     directory "#{__DIR__}/interactive/template"
