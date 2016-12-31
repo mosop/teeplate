@@ -33,13 +33,13 @@ each_file(dir) do |f|
       end
       EOS
     write_body << <<-EOS
-        io = ::MemoryIO.new
+        io = IO::Memory.new
         __ecr#{i}(io)
         io.rewind
         rendering.render "#{local_name}", io
       EOS
   else
-    io = MemoryIO.new
+    io = IO::Memory.new
     File.open(f){|f| IO.copy(f, io)}
     base64 = Base64.encode(io)
     write_body << <<-EOS

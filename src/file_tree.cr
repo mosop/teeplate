@@ -10,7 +10,7 @@ module Teeplate
 
     class Rendering
       class Entry
-        alias Sliceable = Bytes | MemoryIO
+        alias Sliceable = Bytes | IO::Memory
 
         @rendering : Rendering
         @local_path : String
@@ -77,7 +77,7 @@ module Teeplate
         end
 
         def new_input
-          MemoryIO.new(slice, writeable: false)
+          IO::Memory.new(slice, writeable: false)
         end
 
         def diff
