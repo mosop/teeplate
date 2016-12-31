@@ -117,7 +117,7 @@ module Teeplate
       end
 
       def keep_all!
-        @keep_all
+        @keep_all = true
       end
 
       def keep_all?
