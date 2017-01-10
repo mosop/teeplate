@@ -1,57 +1,68 @@
-require "../../teeplate"
 require "base64"
 
-def each_file(path, &block : (String ->))
-  if Dir.exists?(path)
-    Dir.open(path) do |dir|
-      dir.each do |entry|
-        if entry != "." && entry != ".."
-          each_file(File.join(path, entry)) do |f|
-            block.call f
-          end
-        end
+def each_file(abs, rel, &block : String, String ->)
+  Dir.open(abs) do |d|
+    d.each do |entry|
+      if entry != "." && entry != ".."
+        each_file abs, rel, entry, &block
       end
     end
+  end
+end
+
+def each_file(abs, rel, entry, &block : String, String ->)
+  rel = rel ? File.join(rel, entry) : entry
+  abs = File.join(abs, entry)
+  if Dir.exists?(abs)
+    each_file abs, rel, &block
   else
-    block.call path
+    block.call abs, rel
   end
 end
 
 dir = File.expand_path(ARGV[0])
+raise "No dir." unless Dir.exists?(dir)
 
-write_body = %w()
-
-i = 0
-each_file(dir) do |f|
-  local_name = f.sub(/^#{dir}\//, "")
-  local_name = local_name.gsub(/{{([a-z_](?:[\w_0-9])*)}}/, "\#{@\\1}")
-  if local_name =~ /^(.+)\.ecr$/
-    local_name = $1
-    puts <<-EOS
-      def __ecr#{i}(__io)
-        ::ECR.embed #{f.inspect}, "__io"
-      end
-      EOS
-    write_body << <<-EOS
-        io = IO::Memory.new
-        __ecr#{i}(io)
-        io.rewind
-        rendering.render "#{local_name}", io
-      EOS
-  else
-    io = IO::Memory.new
-    File.open(f){|f| IO.copy(f, io)}
-    base64 = Base64.encode(io)
-    write_body << <<-EOS
-        rendering.render "#{local_name}", ::Base64.decode(#{base64.inspect})
-      EOS
-  end
-
-  i += 1
-end
-
-puts <<-EOS
-  def __write(rendering)
-  #{write_body.join("\n")}
+def pack_ecr(i, sb, abs, rel)
+  sb << <<-EOS
+  \ndef __ecr#{i}(__io)
+    ::ECR.embed #{abs.inspect}, "__io"
   end
   EOS
+  STDOUT << <<-EOS
+  \nio = IO::Memory.new
+  __ecr#{i} io
+  io.rewind
+  rendering.render "#{rel}", io
+  EOS
+end
+
+def pack_blob(sb, abs, rel)
+  STDOUT << "\nrendering.render \"#{rel}\", ::Base64.decode("
+  io = IO::Memory.new
+  File.open(abs){|f| IO.copy(f, io)}
+  if io.size > 0
+    STDOUT << "<<-EOS\n"
+    Base64.encode io, STDOUT
+    STDOUT << "EOS\n)"
+  else
+    STDOUT << "\"\")"
+  end
+end
+
+STDOUT << "def __write(rendering)"
+s = String.build do |sb|
+  i = 0
+  each_file(dir, nil) do |abs, rel|
+    rel = rel.gsub(/{{([a-z_](?:[\w_0-9])*)}}/, "\#{@\\1}")
+    if /^(.+)\.ecr$/ =~ rel
+      pack_ecr i, sb, abs, $1
+      i += 1
+    else
+      pack_blob sb, abs, rel
+    end
+    i += 1
+  end
+end
+STDOUT << "\nend"
+STDOUT << s
