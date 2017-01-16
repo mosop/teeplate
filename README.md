@@ -75,7 +75,8 @@ end
 #### Here we go!
 
 ```crystal
-CrystalInitTemplate.new("teeplate", "Teeplate", "mosop", 2016).render("/path/to/output")
+template = CrystalInitTemplate.new("teeplate", "Teeplate", "mosop", 2016)
+template.render "/path/to/output"
 ```
 
 #### Output structure
@@ -136,12 +137,44 @@ shard.yml already exists...
 overwrite(o)/keep(k)/diff(d)/overwrite all(a)/keep all(n) ?
 ```
 
-## Want to Do
+## Listing Rendered Files
 
-* Listing rendered files (colorized)
+You can print a list of rendered files. To enable it, set true to the `:list` option and call #render.
+
+```crystal
+template = BrandNewCrystalInitTemplate.new("teeplate", "Teeplate", "mosop", 2017)
+template.render "/path/to/overwrite", list: true
+```
+
+Output example:
+
+```
+modified  .gitignore
+identical .travis.yml
+new       Dockerfile
+skipped   LICENSE
+skipped   README.md
+skipped   shard.yml
+modified  spec/spec_helper.cr
+skipped   spec/teeplate_spec.cr
+skipped   src/teeplate/version.cr
+skipped   src/teeplate.cr
+```
+
+You can colorize the output by the `:color` option.
+
+```crystal
+template.render "/path/to/overwrite", list: true, color: true
+```
+
+## Want-to-do
+
+* Merge on overwriting
 
 ## Release Notes
 
+* v0.3.0
+  * Teeplate::FileTree#render prints a list of rendered files with the :list option.
 * v0.2.0
   * (Breaking Change) FileTree#initialize does not receive an output directory. Instead, FileTree#render does.
   * Diff on overwriting confirmation
@@ -150,15 +183,3 @@ overwrite(o)/keep(k)/diff(d)/overwrite all(a)/keep all(n) ?
   * :interactive option to select whether to overwrite existing files
 * v0.1.2
   * :force option to overwrite output files if they exist
-
-## Contributing
-
-1. Fork it ( https://github.com/mosop/teeplate/fork )
-2. Create your feature branch (git checkout -b my-new-feature)
-3. Commit your changes (git commit -am 'Add some feature')
-4. Push to the branch (git push origin my-new-feature)
-5. Create a new Pull Request
-
-## Contributors
-
-- [mosop](https://github.com/mosop) - creator, maintainer

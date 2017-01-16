@@ -4,6 +4,8 @@ version: 0.2.3
 authors:
   - mosop
 
+crystal: 0.20.4
+
 development_dependencies:
   have_files:
     github: mosop/have_files

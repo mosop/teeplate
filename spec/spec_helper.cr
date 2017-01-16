@@ -1,3 +1,48 @@
 require "spec"
 require "have_files/spec/dsl"
 require "../src/teeplate"
+
+module Teeplate::SpecHelper
+  def list_file(s, color, colorize)
+    s.colorize.fore(color).toggle(colorize)
+  end
+
+  def list_new(color = true)
+    list_file "new       ", :green, color
+  end
+
+  def list_ide(color = true)
+    list_file "identical ", :dark_gray, color
+  end
+
+  def list_mod(color = true)
+    list_file "modified  ", :light_red, color
+  end
+
+  def list_ski(color = true)
+    list_file "skipped   ", :light_yellow, color
+  end
+
+  def interact(io, answers, prompt = "")
+    future do
+      loop do
+        if ch = io.out!.read_char
+          prompt += ch
+          if prompt.ends_with?(" ? ")
+            io.in.puts answers.shift
+            unless answers.empty?
+              interact io, answers
+            end
+            break
+          end
+        else
+          future do
+            interact io, answers, prompt
+            nil
+          end
+        end
+      end
+      nil
+    end
+  end
+end
