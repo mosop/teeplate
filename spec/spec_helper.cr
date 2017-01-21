@@ -23,21 +23,22 @@ module Teeplate::SpecHelper
     list_file "skipped   ", :light_yellow, color
   end
 
-  def interact(io, answers, prompt = "")
+  def interact(io, answers, prompt = "", buffer = nil)
     future do
       loop do
         if ch = io.out!.read_char
+          buffer << ch if buffer
           prompt += ch
           if prompt.ends_with?(" ? ")
             io.in.puts answers.shift
             unless answers.empty?
-              interact io, answers
+              interact io, answers, buffer: buffer
             end
             break
           end
         else
           future do
-            interact io, answers, prompt
+            interact io, answers, prompt, buffer: buffer
             nil
           end
         end
