@@ -14,6 +14,11 @@ module Teeplate
     def initialize(@renderer : Renderer, @data : AsDataEntry)
     end
 
+    # :nodec:
+    def appends?
+      @data.path.starts_with?("+")
+    end
+
     @out_path : String?
     # Returns an output location.
     #
@@ -24,12 +29,17 @@ module Teeplate
       end
     end
 
+    @local_path : String?
     # Returns an output path relative to the base location.
     #
     # It returns the data entry's path by default.
     # Override this method if this path should be different from the data entry's path.
     def local_path
-      @data.path
+      @local_path ||= if appends?
+        @data.path[1..-1]
+      else
+        @data.path
+      end
     end
 
     # :nodoc:
@@ -68,7 +78,7 @@ module Teeplate
     #
     # Override this method if data should be written in a special way.
     def write
-      File.open(out_path, "w") do |f|
+      File.open(out_path, appends? ? "a" : "w") do |f|
         @data.write_to f
       end
     end
@@ -99,6 +109,7 @@ module Teeplate
       return :modify if forces? || @renderer.overwrites_all?
       return :keep if !@renderer.interactive? || @renderer.keeps_all?
       return modifies?("#{local_path} is a symlink...", diff: false) if File.symlink?(out_path)
+      return :modify if appends?
       return :none if identical?
       modifies?("#{local_path} already exists...", diff: true)
     end
