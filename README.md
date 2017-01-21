@@ -174,7 +174,8 @@ template.render "/path/to/overwrite", list: true, color: true
 ## Release Notes
 
 * v0.3.0
-  * Rendering with append mode (See [the issue](https://github.com/mosop/teeplate/issues/2))
+  * Quit on overwriting
+  * Rendering with append mode (see [the issue](https://github.com/mosop/teeplate/issues/2))
   * Teeplate::FileTree#render prints a list of rendered files with the :list option.
 * v0.2.0
   * (Breaking Change) FileTree#initialize does not receive an output directory. Instead, FileTree#render does.
