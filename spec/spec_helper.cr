@@ -27,7 +27,9 @@ module Teeplate::SpecHelper
     future do
       loop do
         if ch = io.out!.read_char
-          buffer << ch if buffer
+          if buf = buffer
+            buf << ch
+          end
           prompt += ch
           if prompt.ends_with?(" ? ")
             io.in.puts answers.shift
