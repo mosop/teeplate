@@ -3,13 +3,10 @@ module Teeplate
     DIFF = `which diff`.chomp
     GIT = `which git`.chomp
 
-    alias Data = Base64Data | String
-
     @renderer : Renderer
-    @local_path : String
-    @data : Data
+    @data : AsDataEntry
 
-    def initialize(@renderer, @local_path, @data)
+    def initialize(@renderer, @data)
     end
 
     @slice : Slice(UInt8)?
@@ -19,7 +16,7 @@ module Teeplate
 
     @out_path : String?
     def out_path
-      @out_path ||= File.join(@renderer.out_dir, @local_path).tap do |path|
+      @out_path ||= File.join(@renderer.out_dir, @data.path).tap do |path|
         Dir.mkdir_p File.dirname(path)
       end
     end
@@ -27,7 +24,7 @@ module Teeplate
     def list(s, color)
       if @renderer.listing?
         print s.colorize.fore(color).toggle(@renderer.colorizes?)
-        puts @local_path
+        puts @data.path
       end
     end
 
@@ -49,7 +46,7 @@ module Teeplate
     def write
       Dir.rmdir out_path if File.directory?(out_path)
       File.open(out_path, "w") do |f|
-        @data.to_s f
+        @data.write_to f
       end
     end
 
@@ -69,14 +66,16 @@ module Teeplate
       return modifies?("#{out_path} is a symlink...", diff: false) if File.symlink?(out_path)
       return modifies?("#{out_path} is a directory...", diff: false) if File.directory?(out_path)
       return :none if identical?
-      modifies?("#{@local_path} already exists...", diff: true)
+      modifies?("#{@data.path} already exists...", diff: true)
     end
 
     def identical?
-      return false if File.size(out_path) != @data.size
+      if size = @data.size?
+        return false if File.size(out_path) != size
+      end
       r, w = IO.pipe
       future do
-        @data.to_s w
+        @data.write_to w
         w.close
       end
       begin
@@ -124,7 +123,6 @@ module Teeplate
           @renderer.keep_all!
           return :keep
         when "q"
-          @renderer.quit!
           raise Quit.new
         end
       end
@@ -133,7 +131,7 @@ module Teeplate
     def diff
       r, w = IO.pipe
       future do
-        @data.to_s w
+        @data.write_to w
         w.close
       end
       begin

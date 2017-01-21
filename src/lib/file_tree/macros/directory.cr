@@ -21,23 +21,23 @@ def each_file(abs, rel, entry, &block : String, String ->)
 end
 
 dir = File.expand_path(ARGV[0])
-raise "No dir." unless Dir.exists?(dir)
+raise "No directory." unless Dir.exists?(dir)
 
 def pack_ecr(i, sb, abs, rel)
   sb << <<-EOS
-  \ndef __ecr#{i}(__io)
-    ::ECR.embed #{abs.inspect}, "__io"
+  \ndef __ecr#{i}(____io)
+    ::ECR.embed #{abs.inspect}, "____io"
   end
   EOS
   STDOUT << <<-EOS
   \nio = IO::Memory.new
   __ecr#{i} io
-  yield "#{rel}", io.to_s
+  ____data << ::Teeplate::StringData.new("#{rel}", io.to_s)
   EOS
 end
 
 def pack_blob(sb, abs, rel)
-  STDOUT << "\nyield \"#{rel}\", ::Teeplate::Base64Data.new("
+  STDOUT << "\n____data << ::Teeplate::Base64Data.new(\"#{rel}\", "
   io = IO::Memory.new
   File.open(abs){|f| IO.copy(f, io)}
   if io.size > 0
@@ -49,7 +49,7 @@ def pack_blob(sb, abs, rel)
   end
 end
 
-STDOUT << "def __render"
+STDOUT << "def ____collect_data(____data)"
 s = String.build do |sb|
   i = 0
   each_file(dir, nil) do |abs, rel|
