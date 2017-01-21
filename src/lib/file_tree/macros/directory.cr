@@ -32,12 +32,12 @@ def pack_ecr(i, sb, abs, rel)
   STDOUT << <<-EOS
   \nio = IO::Memory.new
   __ecr#{i} io
-  ____data << ::Teeplate::StringData.new("#{rel}", io.to_s)
+  ____files << ::Teeplate::StringData.new("#{rel}", io.to_s)
   EOS
 end
 
 def pack_blob(sb, abs, rel)
-  STDOUT << "\n____data << ::Teeplate::Base64Data.new(\"#{rel}\", "
+  STDOUT << "\n____files << ::Teeplate::Base64Data.new(\"#{rel}\", "
   io = IO::Memory.new
   File.open(abs){|f| IO.copy(f, io)}
   if io.size > 0
@@ -49,7 +49,7 @@ def pack_blob(sb, abs, rel)
   end
 end
 
-STDOUT << "def ____collect_data(____data)"
+STDOUT << "def ____collect_files(____files)"
 s = String.build do |sb|
   i = 0
   each_file(dir, nil) do |abs, rel|

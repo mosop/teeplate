@@ -1,74 +1,109 @@
 module Teeplate
   class RenderingEntry
+    # :nodoc:
     DIFF = `which diff`.chomp
+    # :nodoc:
     GIT = `which git`.chomp
 
-    @renderer : Renderer
-    @data : AsDataEntry
+    # Returns the renderer.
+    getter renderer : Renderer
 
-    def initialize(@renderer, @data)
-    end
+    # Returns the data entry.
+    getter data : AsDataEntry
 
-    @slice : Slice(UInt8)?
-    def slice
-      @slice ||= @sliceable.to_slice
+    def initialize(@renderer : Renderer, @data : AsDataEntry)
     end
 
     @out_path : String?
+    # Returns an output location.
+    #
+    # It makes an absolute location with the renderer's setting and this entry's local path.
     def out_path
-      @out_path ||= File.join(@renderer.out_dir, @data.path).tap do |path|
+      @out_path ||= File.join(@renderer.out_path, local_path).tap do |path|
         Dir.mkdir_p File.dirname(path)
       end
     end
 
-    def list(s, color)
-      if @renderer.listing?
-        print s.colorize.fore(color).toggle(@renderer.colorizes?)
-        puts @data.path
-      end
+    # Returns an output path relative to the base location.
+    #
+    # It returns the data entry's path by default.
+    # Override this method if this path should be different from the data entry's path.
+    def local_path
+      @data.path
     end
 
+    # :nodoc:
+    def list_if_any(s, color)
+      list s, color if @renderer.listing?
+    end
+
+    # :nodoc:
+    def list(s, color)
+      print s.colorize.fore(color).toggle(@renderer.colorizes?)
+      puts local_path
+    end
+
+    # :nodoc:
     def render
       case action
       when :new
-        write
-        list "new       ", :green
+        prepare_and_write
+        list_if_any "new       ", :green
       when :none
-        list "identical ", :dark_gray
+        list_if_any "identical ", :dark_gray
       when :modify
-        write
-        list "modified  ", :light_red
+        prepare_and_write
+        list_if_any "modified  ", :light_red
       when :keep
-        list "skipped   ", :light_yellow
+        list_if_any "skipped   ", :light_yellow
       end
     end
 
+    # :nodoc:
+    def prepare_and_write
+      write
+    end
+
+    # Writes data to the output location.
+    #
+    # Override this method if data should be written in a special way.
     def write
-      Dir.rmdir out_path if File.directory?(out_path)
       File.open(out_path, "w") do |f|
         @data.write_to f
       end
     end
 
+    # :nodoc:
     def confirm
       action
     end
 
+    # Tests if this entry forces overwriting.
+    #
+    # This condition is determined by the renderer's setting by default.
+    # Override this method if the condition should be determined regardless of the renderer's setting.
+    def forces?
+      @renderer.forces?
+    end
+
     @action : Symbol?
+    # :nodoc:
     def action
       @action ||= get_action
     end
 
+    # :nodoc:
     def get_action
       return :new unless File.exists?(out_path)
-      return :modify if @renderer.forces? || @renderer.overwrites_all?
+      return :keep if File.directory?(out_path)
+      return :modify if forces? || @renderer.overwrites_all?
       return :keep if !@renderer.interactive? || @renderer.keeps_all?
-      return modifies?("#{out_path} is a symlink...", diff: false) if File.symlink?(out_path)
-      return modifies?("#{out_path} is a directory...", diff: false) if File.directory?(out_path)
+      return modifies?("#{local_path} is a symlink...", diff: false) if File.symlink?(out_path)
       return :none if identical?
-      modifies?("#{@data.path} already exists...", diff: true)
+      modifies?("#{local_path} already exists...", diff: true)
     end
 
+    # :nodoc:
     def identical?
       if size = @data.size?
         return false if File.size(out_path) != size
@@ -93,6 +128,7 @@ module Teeplate
       end
     end
 
+    # :nodoc:
     def make_prompt(diff)
       String.build do |sb|
         sb << "overwrite(o)/keep(k)"
@@ -103,6 +139,7 @@ module Teeplate
       end
     end
 
+    # :nodoc:
     def modifies?(message, diff)
       prompt = make_prompt(diff)
       STDOUT.puts message
@@ -128,6 +165,7 @@ module Teeplate
       end
     end
 
+    # :nodoc:
     def diff
       r, w = IO.pipe
       future do
