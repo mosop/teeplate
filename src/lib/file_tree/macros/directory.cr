@@ -32,7 +32,7 @@ def pack_ecr(i, sb, abs, rel)
   STDOUT << <<-EOS
   \nio = IO::Memory.new
   __ecr#{i} io
-  ____files << ::Teeplate::StringData.new("#{rel}", io.to_s)
+  ____files << ::Teeplate::StringData.new("#{rel}", io.to_s, #{File.stat(abs).perm})
   EOS
 end
 
@@ -43,10 +43,11 @@ def pack_blob(sb, abs, rel)
   if io.size > 0
     STDOUT << "#{io.size}_i64, <<-EOS\n"
     Base64.encode io, STDOUT
-    STDOUT << "EOS\n)"
+    STDOUT << "EOS\n"
   else
-    STDOUT << "0_i64, \"\")"
+    STDOUT << "0_i64, \"\""
   end
+  STDOUT << ", #{File.stat(abs).perm})"
 end
 
 STDOUT << "def ____collect_files(____files)"

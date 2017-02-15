@@ -4,12 +4,17 @@ module Teeplate
 
     getter path : String
     getter string : String
+    getter perm : Int32
 
-    def initialize(@path, @string)
+    def initialize(@path, @string, @perm)
     end
 
     def size?
       @string.size
+    end
+
+    def perm?
+      @perm
     end
 
     def write_to(io : IO)

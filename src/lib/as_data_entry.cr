@@ -10,5 +10,10 @@ module Teeplate
     #
     # If the size can't be determined, returns nil.
     abstract def size? : Int64?
+
+    # Returns permission.
+    #
+    # If no specific permission, returns nil.
+    abstract def perm? : Int32?
   end
 end

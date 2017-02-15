@@ -58,13 +58,17 @@ module Teeplate
       case action
       when :new
         prepare_and_write
+        set_perm
         list_if_any "new       ", :green
       when :none
+        set_perm
         list_if_any "identical ", :dark_gray
       when :modify
         prepare_and_write
+        set_perm
         list_if_any "modified  ", :light_red
       when :keep
+        set_perm
         list_if_any "skipped   ", :light_yellow
       end
     end
@@ -80,6 +84,13 @@ module Teeplate
     def write
       File.open(out_path, appends? ? "a" : "w") do |f|
         @data.write_to f
+      end
+    end
+
+    # :nodoc:
+    def set_perm
+      if perm = @data.perm? && File.file?(out_path)
+        File.chmod(out_path, @data.perm)
       end
     end
 
