@@ -16,11 +16,11 @@ module Teeplate::SpecHelper
   end
 
   def list_mod(color = true)
-    list_file "modified  ", :light_red, color
+    list_file "modified  ", :magenta, color
   end
 
   def list_ski(color = true)
-    list_file "skipped   ", :light_yellow, color
+    list_file "skipped   ", :yellow, color
   end
 
   def interact(io, answers, prompt = "", buffer = nil)

@@ -66,10 +66,14 @@ module Teeplate
       when :modify
         prepare_and_write
         set_perm
-        list_if_any "modified  ", :light_red
+        list_if_any "modified  ", :magenta
+      when :rewrite
+        prepare_and_write
+        set_perm
+        list_if_any "rewritten ", :red
       when :keep
         set_perm
-        list_if_any "skipped   ", :light_yellow
+        list_if_any "skipped   ", :yellow
       end
     end
 
@@ -117,7 +121,7 @@ module Teeplate
     def get_action
       return :new unless File.exists?(out_path)
       return :keep if File.directory?(out_path)
-      return :modify if forces? || @renderer.overwrites_all?
+      return :rewrite if forces? || @renderer.overwrites_all?
       return :keep if !@renderer.interactive? || @renderer.keeps_all?
       return modifies?("#{local_path} is a symlink...", diff: false) if File.symlink?(out_path)
       return :modify if appends?
