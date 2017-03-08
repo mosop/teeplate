@@ -108,7 +108,7 @@ module Teeplate
     # This condition is determined by the renderer's setting by default.
     # Override this method if the condition should be determined regardless of the renderer's setting.
     def forces?
-      @renderer.forces?
+      @data.forces? || @renderer.forces?
     end
 
     @action : Symbol?

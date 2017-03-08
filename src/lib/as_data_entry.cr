@@ -15,5 +15,8 @@ module Teeplate
     #
     # If no specific permission, returns nil.
     abstract def perm? : Int32?
+
+    # :nodoc:
+    abstract def forces? : Bool
   end
 end
