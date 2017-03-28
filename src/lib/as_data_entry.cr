@@ -9,12 +9,12 @@ module Teeplate
     # Returns data size.
     #
     # If the size can't be determined, returns nil.
-    abstract def size? : Int64?
+    abstract def size? : UInt64?
 
     # Returns permission.
     #
     # If no specific permission, returns nil.
-    abstract def perm? : Int32?
+    abstract def perm? : UInt16?
 
     # :nodoc:
     abstract def forces? : Bool

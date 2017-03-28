@@ -1,10 +1,10 @@
 name: teeplate
-version: 0.4.2
+version: 0.4.3
 
 authors:
   - mosop
 
-crystal: 0.20.5
+crystal: 0.21.1
 
 development_dependencies:
   have_files:

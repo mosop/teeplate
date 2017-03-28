@@ -41,11 +41,11 @@ def pack_blob(sb, abs, rel)
   io = IO::Memory.new
   File.open(abs){|f| IO.copy(f, io)}
   if io.size > 0
-    STDOUT << "#{io.size}_i64, <<-EOS\n"
+    STDOUT << "#{io.size}_u64, <<-EOS\n"
     Base64.encode io, STDOUT
     STDOUT << "EOS\n"
   else
-    STDOUT << "0_i64, \"\""
+    STDOUT << "0_u64, \"\""
   end
   STDOUT << ", #{File.stat(abs).perm})"
 end

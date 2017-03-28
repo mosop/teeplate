@@ -27,5 +27,16 @@ module Teeplate
       renderer.render
       renderer
     end
+
+    # :nodoc:
+    def ____collect_files(files)
+    end
+
+    # Collects file entries from the *dir* directory.
+    def collect_from(dir, unique = false, relative_dir = nil)
+      FileEntryCollector.new(File.expand_path(dir, Dir.current), relative_dir: relative_dir).entries.each do |entry|
+        file_entries << entry unless file_entries.find{|i| i.path == entry.path}
+      end
+    end
   end
 end

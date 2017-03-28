@@ -3,12 +3,13 @@ module Teeplate
     include AsDataEntry
 
     getter path : String
-    getter size : Int64
+    getter size : UInt64
     getter encoded : String
-    getter perm : Int32
+    getter perm : UInt16
     getter? forces : Bool
 
-    def initialize(@path, @size : Int64, @encoded, @perm = 0o644, force = false)
+    def initialize(@path, @size, @encoded, perm : Int::Primitive = 0o644, force = false)
+      @perm = perm.to_u16
       @forces = force
     end
 
