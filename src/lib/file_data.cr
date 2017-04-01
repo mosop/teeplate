@@ -5,15 +5,15 @@ module Teeplate
     getter absolute_path : String
     getter path : String
     getter size : UInt64
-    getter perm : UInt16
+    getter perm : UInt32
     getter? forces : Bool
 
     def initialize(@absolute_path, @path, size : UInt64? = nil, perm : Int::Primitive? = nil, force = false)
       @size = size || File.size(@absolute_path)
       @perm = if perm
-        perm.to_u16
+        perm.to_u32
       else
-        File.stat(@absolute_path).perm
+        File.stat(@absolute_path).perm.to_u32
       end
       @forces = force
     end
