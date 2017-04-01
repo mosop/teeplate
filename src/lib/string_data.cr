@@ -4,11 +4,11 @@ module Teeplate
 
     getter path : String
     getter string : String
-    getter perm : UInt16
+    getter perm : UInt32
     getter? forces : Bool
 
     def initialize(@path, @string, perm : Int::Primitive = 0o644, force = false)
-      @perm = perm.to_u16
+      @perm = perm.to_u32
       @forces = force
     end
 
