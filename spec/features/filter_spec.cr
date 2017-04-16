@@ -12,11 +12,11 @@ module TeeplateFileTreeTemplateFeature
     @year : Int32
 
     def initialize(@file, @class, @author, @year)
-      @include_version = false
+      @exclude_version = true
     end
 
     def filter(entries)
-      entries.reject{ |entry| entry.path.includes?("version.cr") && !@include_version }
+      entries.reject{ |entry| entry.path.includes?("version.cr") && @exclude_version }
     end
   end
 
