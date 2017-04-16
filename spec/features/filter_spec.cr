@@ -19,7 +19,7 @@ module TeeplateFileTreeTemplateFeature
     end
   end
 
-  it name do
+  it "filters templates" do
     HaveFiles.tmpdir do |tmp|
       Template.new("teeplate", "Teeplate", "mosop", 2016).render(tmp)
       expected_file = "#{__DIR__}/../../test/file_tree_template/expected/src/teeplate/version.cr"
