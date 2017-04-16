@@ -1,9 +1,9 @@
 require "../spec_helper"
 
-module TeeplateFileTreeTemplateFeature
+module FilterFeature
   extend HaveFiles::Spec::Dsl
 
-  class Template < Teeplate::FileTree
+  class FilterTemplate < Teeplate::FileTree
     directory "#{__DIR__}/../../test/file_tree_template/template"
 
     @file : String
@@ -12,17 +12,17 @@ module TeeplateFileTreeTemplateFeature
     @year : Int32
 
     def initialize(@file, @class, @author, @year)
-      @exclude_version = true
+      @skip_version = true
     end
 
     def filter(entries)
-      entries.reject{ |entry| entry.path.includes?("version.cr") && @exclude_version }
+      entries.reject{ |entry| entry.path.includes?("version.cr") && @skip_version }
     end
   end
 
-  it "filters templates" do
+  it "filters templates based on options" do
     HaveFiles.tmpdir do |tmp|
-      Template.new("teeplate", "Teeplate", "mosop", 2016).render(tmp)
+      FilterTemplate.new("teeplate", "Teeplate", "mosop", 2016).render(tmp)
       expected_file = "#{__DIR__}/../../test/file_tree_template/expected/src/teeplate/version.cr"
       tmp.should_not have_files expected_file
     end
