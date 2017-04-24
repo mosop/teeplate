@@ -23,9 +23,16 @@ module Teeplate
     # For more information about the arguments, see `Renderer`.
     def render(out_dir, force : Bool = false, interactive : Bool = false, interact : Bool = false, list : Bool = false, color : Bool = false, per_entry : Bool = false, quit : Bool = true)
       renderer = Renderer.new(out_dir, force: force, interact: interactive || interact, list: list, color: color, per_entry: per_entry, quit: quit)
-      renderer << file_entries
+      renderer << rendered_file_entries
       renderer.render
       renderer
+    end
+
+    # Returns file entries to be rendered.
+    #
+    # This method just returns the `#file_entries` method's result. To filter entries, override this method.
+    def rendered_file_entries
+      file_entries
     end
 
     # :nodoc:
