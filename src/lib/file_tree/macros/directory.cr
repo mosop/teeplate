@@ -2,11 +2,9 @@ require "base64"
 
 def each_file(abs, rel, &block : String, String ->)
   Dir.open(abs) do |d|
-    d.each do |entry|
-      if entry != "." && entry != ".."
-        each_file abs, rel, entry, &block
-      end
-    end
+    d.each_child do |entry|
+      each_file abs, rel, entry, &block
+    end    
   end
 end
 

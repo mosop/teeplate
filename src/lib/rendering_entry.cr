@@ -200,9 +200,9 @@ module Teeplate
       end
       begin
         if !GIT.empty?
-          Process.new(GIT, ["diff", "--no-index", "--", out_path, "-"], shell: true, input: r, output: true, error: true).wait
+          Process.new(GIT, ["diff", "--no-index", "--", out_path, "-"], shell: true, input: r, output: Process::Redirect::Inherit, error: Process::Redirect::Inherit).wait
         elsif !DIFF.empty?
-          Process.new(DIFF, ["-u", out_path, "-"], shell: true, input: r, output: true, error: true).wait
+          Process.new(DIFF, ["-u", out_path, "-"], shell: true, input: r, output: Process::Redirect::Inherit, error: Process::Redirect::Inherit).wait
         else
           STDOUT.puts "No diff command is installed."
         end
