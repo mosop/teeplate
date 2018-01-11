@@ -42,6 +42,9 @@ module Teeplate
     getter data_entries = [] of AsDataEntry
 
     # :nodoc:
+    getter? pending_destroy = false
+
+    # :nodoc:
     getter entries = [] of RenderingEntry
 
     def initialize(@out_path : String, force : Bool, interact : Bool, list : Bool, color : Bool, @per_entry : Bool, quit : Bool)
@@ -96,6 +99,38 @@ module Teeplate
       rescue ex : Quit
         @quitted = true
       end
+    end
+    
+    # :nodoc:
+    def destroy
+      @pending_destroy = true
+      begin
+        @entries.each(&.destroy) if should_destroy? 
+      rescue ex : Quit
+        @quitted = true
+      end
+    end
+  
+    # Confirm whether or not the user wishes to destroy the files if in interactive mode.
+    def should_destroy?
+      if @interactive
+        STDOUT.puts "Remove the following files (y/n)?"
+
+        @entries.each do |entry|
+          puts entry.out_path
+        end
+
+        loop do
+          case input = ::STDIN.gets.to_s.strip.downcase
+          when "y"
+            return true
+          when "n"
+            return false
+          end
+        end
+      end
+
+      true
     end
   end
 end
