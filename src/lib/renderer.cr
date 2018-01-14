@@ -105,32 +105,50 @@ module Teeplate
     def destroy
       @pending_destroy = true
       begin
-        @entries.each(&.destroy) if should_destroy? 
+        if @interactive
+          @entries.each do |entry|
+            entry.destroy if should_destroy?(entry)
+          end
+        else
+          @entries.each(&.destroy) if should_destroy_all?(@entries)
+        end
       rescue ex : Quit
         @quitted = true
       end
     end
-  
-    # Confirm whether or not the user wishes to destroy the files if in interactive mode.
-    def should_destroy?
-      if @interactive
-        STDOUT.puts "Remove the following files (y/n)?"
 
-        @entries.each do |entry|
-          puts entry.out_path
-        end
+    # Confirm whether the user wants to destroy a singe file.
+    def should_destroy?(entry : RenderingEntry)
+      STDOUT.puts "Destroy #{entry.out_path}? (y/n)"
 
-        loop do
-          case input = ::STDIN.gets.to_s.strip.downcase
-          when "y"
-            return true
-          when "n"
-            return false
-          end
+      loop do
+        case input = ::STDIN.gets.to_s.strip.downcase
+        when "y"
+          return true
+        when "n"
+          return false
         end
       end
+    end
+  
+    # Confirm whether or not the user wishes to destroy multiple files.
+    def should_destroy_all?(entries : Array(RenderingEntry))
+      return should_destroy?(entries.first) if entries.size == 1
 
-      true
+      STDOUT.puts "Destroy all the following files? (y/n)"
+
+      entries.each do |entry|
+        puts entry.out_path
+      end
+
+      loop do
+        case input = ::STDIN.gets.to_s.strip.downcase
+        when "y"
+          return true
+        when "n"
+          return false
+        end
+      end
     end
   end
 end

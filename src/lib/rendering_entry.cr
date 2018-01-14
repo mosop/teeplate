@@ -95,8 +95,9 @@ module Teeplate
     def destroy
       begin
         File.delete out_path
+        list_if_any "destroyed ", :red
       rescue
-        STDOUT.puts "#{out_path} not found, nothing to destroy"
+        list_if_any "skipped ", :yellow
       end
     end
 
