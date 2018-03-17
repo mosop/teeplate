@@ -101,16 +101,21 @@ module Teeplate
       end
     end
     
-    # :nodoc:
-    def destroy
+    # Destroy templates.
+    #
+    # If passing paths as skip, these paths will be skipped in the destroy process, and thus will remain on the 
+    # file system
+    def destroy(skip : Array(String)?)
       @pending_destroy = true
       begin
         if @interactive
           @entries.each do |entry|
-            entry.destroy if should_destroy?(entry)
+            entry.destroy(should_destroy?(entry))
           end
-        else
-          @entries.each(&.destroy) if should_destroy_all?(@entries)
+        elsif should_destroy_all?(@entries)
+          @entries.each do |entry|
+            entry.destroy(should_skip_on_destroy?(entry, skip))
+          end
         end
       rescue ex : Quit
         @quitted = true
@@ -138,7 +143,7 @@ module Teeplate
       STDOUT.puts "Destroy all the following files? (y/n)"
 
       entries.each do |entry|
-        puts entry.out_path
+        STDOUT.puts entry.out_path
       end
 
       loop do
@@ -149,6 +154,33 @@ module Teeplate
           return false
         end
       end
+    end
+
+    # Determine whether a file should be skipped upon performing #destroy, based on the
+    # provided array of paths to skip.
+    def should_skip_on_destroy?(file : RenderingEntry, skip : Array(String)?) : Bool
+      skip_file = false
+
+      skip_path_parts : Array(String)?
+      entry_path_parts : Array(String)?
+      entry_path_parts = file.out_path.split("/")
+
+      skip.each do |skip_path|
+        skip_path_parts = skip_path.split("/")
+
+        skip_path_parts.unshift(entry_path_parts.first)
+        skip_path_parts.each_with_index do |part, i|
+          if i + 1 > entry_path_parts.size
+            skip_file = false
+            break
+          end
+          skip_file = part.downcase == entry_path_parts[i].downcase
+        end
+
+        break if skip_file
+      end
+
+      skip_file
     end
   end
 end

@@ -92,11 +92,15 @@ module Teeplate
     end
 
     # :nodoc:
-    def destroy
-      begin
-        File.delete out_path
-        list_if_any "destroyed ", :red
-      rescue
+    def destroy(skip? = false)
+      unless skip?
+        begin
+          File.delete out_path
+          list_if_any "destroyed ", :red
+        rescue
+          list_if_any "skipped ", :yellow
+        end
+      else
         list_if_any "skipped ", :yellow
       end
     end
