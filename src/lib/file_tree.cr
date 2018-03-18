@@ -1,3 +1,4 @@
+# Trying to trigger a Travis CI build, remove this line after that :)
 module Teeplate
   # Collects template files from a local directory.
   abstract class FileTree
