@@ -30,7 +30,7 @@ def pack_ecr(i, sb, abs, rel)
   STDOUT << <<-EOS
   \nio = IO::Memory.new
   __ecr#{i} io
-  ____files << ::Teeplate::StringData.new("#{rel}", io.to_s, #{File.stat(abs).perm})
+  ____files << ::Teeplate::StringData.new("#{rel}", io.to_s, File::Permissions.from_value(#{File.info(abs).permissions.value}))
   EOS
 end
 
@@ -45,7 +45,7 @@ def pack_blob(sb, abs, rel)
   else
     STDOUT << "0_u64, \"\""
   end
-  STDOUT << ", #{File.stat(abs).perm})"
+  STDOUT << ", File::Permissions.from_value(#{File.info(abs).permissions.value}))"
 end
 
 STDOUT << "def ____collect_files(____files)"

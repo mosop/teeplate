@@ -16,8 +16,8 @@ module TeeplateInternalSpecs::Executable
         file1 = File.join(tmp, "file1")
         file2 = File.join(tmp, "file2")
         Template.new.render tmp, force: true
-        File.stat(file1).perm.should eq FILE1_PERM
-        File.stat(file2).perm.should eq FILE2_PERM
+        File.info(file1).permissions.should eq FILE1_PERM
+        File.info(file2).permissions.should eq FILE2_PERM
       end
     end
 
@@ -30,8 +30,8 @@ module TeeplateInternalSpecs::Executable
         File.write file2, ""
         File.chmod file2, 0o666
         Template.new.render tmp, force: true
-        File.stat(file1).perm.should eq FILE1_PERM
-        File.stat(file2).perm.should eq FILE2_PERM
+        File.info(file1).permissions.should eq FILE1_PERM
+        File.info(file2).permissions.should eq FILE2_PERM
       end
     end
   end
