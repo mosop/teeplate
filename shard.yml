@@ -9,7 +9,7 @@ crystal: 0.24.2
 development_dependencies:
   have_files:
     github: mosop/have_files
-    version: ~> 0.3.3
+    version: ~> 0.4.0
   stdio:
     github: mosop/stdio
     version: ~> 0.1.2
