@@ -94,6 +94,20 @@ module Teeplate
     end
 
     # :nodoc:
+    def destroy(skip? = false)
+      unless skip?
+        begin
+          File.delete out_path
+          list_if_any "destroyed ", :red
+        rescue
+          list_if_any "skipped ", :yellow
+        end
+      else
+        list_if_any "skipped ", :yellow
+      end
+    end
+
+    # :nodoc:
     def set_perm
       if perm = @data.perm? && File.file?(out_path)
         File.chmod(out_path, @data.perm)
@@ -128,6 +142,7 @@ module Teeplate
       return :keep if !@renderer.interactive? || @renderer.keeps_all?
       return modifies?("#{local_path} is a symlink...", diff: false) if File.symlink?(out_path)
       return :modify if appends?
+      return :destroy if @renderer.pending_destroy?
       return :none if identical?
       modifies?("#{local_path} already exists...", diff: true)
     end

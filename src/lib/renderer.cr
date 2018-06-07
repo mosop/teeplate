@@ -42,6 +42,9 @@ module Teeplate
     getter data_entries = [] of AsDataEntry
 
     # :nodoc:
+    getter? pending_destroy = false
+
+    # :nodoc:
     getter entries = [] of RenderingEntry
 
     def initialize(@out_path : String, force : Bool, interact : Bool, list : Bool, color : Bool, @per_entry : Bool, quit : Bool)
@@ -96,6 +99,88 @@ module Teeplate
       rescue ex : Quit
         @quitted = true
       end
+    end
+    
+    # Destroy templates.
+    #
+    # If passing paths as skip, these paths will be skipped in the destroy process, and thus will remain on the 
+    # file system
+    def destroy(skip : Array(String)?)
+      @pending_destroy = true
+      begin
+        if @interactive
+          @entries.each do |entry|
+            entry.destroy(should_destroy?(entry))
+          end
+        elsif should_destroy_all?(@entries)
+          @entries.each do |entry|
+            entry.destroy(should_skip_on_destroy?(entry, skip))
+          end
+        end
+      rescue ex : Quit
+        @quitted = true
+      end
+    end
+
+    # Confirm whether the user wants to destroy a singe file.
+    def should_destroy?(entry : RenderingEntry)
+      STDOUT.puts "Destroy #{entry.out_path}? (y/n)"
+
+      loop do
+        case input = ::STDIN.gets.to_s.strip.downcase
+        when "y"
+          return true
+        when "n"
+          return false
+        end
+      end
+    end
+  
+    # Confirm whether or not the user wishes to destroy multiple files.
+    def should_destroy_all?(entries : Array(RenderingEntry))
+      return should_destroy?(entries.first) if entries.size == 1
+
+      STDOUT.puts "Destroy all the following files? (y/n)"
+
+      entries.each do |entry|
+        STDOUT.puts entry.out_path
+      end
+
+      loop do
+        case input = ::STDIN.gets.to_s.strip.downcase
+        when "y"
+          return true
+        when "n"
+          return false
+        end
+      end
+    end
+
+    # Determine whether a file should be skipped upon performing #destroy, based on the
+    # provided array of paths to skip.
+    def should_skip_on_destroy?(file : RenderingEntry, skip : Array(String)?) : Bool
+      skip_file = false
+
+      skip_path_parts : Array(String)?
+      entry_path_parts : Array(String)?
+      entry_path_parts = file.out_path.split("/")
+
+      skip.each do |skip_path|
+        skip_path_parts = skip_path.split("/")
+
+        skip_path_parts.unshift(entry_path_parts.first)
+        skip_path_parts.each_with_index do |part, i|
+          if i + 1 > entry_path_parts.size
+            skip_file = false
+            break
+          end
+          skip_file = part.downcase == entry_path_parts[i].downcase
+        end
+
+        break if skip_file
+      end
+
+      skip_file
     end
   end
 end
