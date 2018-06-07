@@ -26,8 +26,8 @@ module TeeplateListingRenderedFilesFeature
           #{list_new}shard.yml
           #{list_new}spec/spec_helper.cr
           #{list_new}spec/teeplate_spec.cr
-          #{list_new}src/teeplate/version.cr
-          #{list_new}src/teeplate.cr\n
+          #{list_new}src/teeplate.cr
+          #{list_new}src/teeplate/version.cr\n
           EOS
         end
         Stdio.capture do |io|
@@ -41,8 +41,8 @@ module TeeplateListingRenderedFilesFeature
           #{list_mod}shard.yml
           #{list_ide}spec/spec_helper.cr
           #{list_ide}spec/teeplate_spec.cr
-          #{list_ide}src/teeplate/version.cr
-          #{list_ide}src/teeplate.cr\n
+          #{list_ide}src/teeplate.cr
+          #{list_ide}src/teeplate/version.cr\n
           EOS
         end
       end

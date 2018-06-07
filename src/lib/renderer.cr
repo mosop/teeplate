@@ -85,14 +85,15 @@ module Teeplate
     # Starts rendering.
     def render
       begin
-        @entries.each do |entry|
+        sorted_entries = @entries.sort{|a, b| a.local_path <=> b.local_path}
+        sorted_entries.each do |entry|
           if @per_entry
             entry.render
           else
             entry.confirm
           end
         end
-        @entries.each(&.render) unless @per_entry
+        sorted_entries.each(&.render) unless @per_entry
       rescue ex : Quit
         @quitted = true
       end
