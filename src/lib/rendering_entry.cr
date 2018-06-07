@@ -20,6 +20,7 @@ module Teeplate
     end
 
     @out_path : String?
+
     # Returns an output location.
     #
     # It makes an absolute location with the renderer's setting and this entry's local path.
@@ -30,6 +31,7 @@ module Teeplate
     end
 
     @local_path : String?
+
     # Returns an output path relative to the base location.
     #
     # It returns the data entry's path by default.
@@ -112,6 +114,7 @@ module Teeplate
     end
 
     @action : Symbol?
+
     # :nodoc:
     def action
       @action ||= get_action
@@ -200,9 +203,9 @@ module Teeplate
       end
       begin
         if !GIT.empty?
-          Process.new(GIT, ["diff", "--no-index", "--", out_path, "-"], shell: true, input: r, output: true, error: true).wait
+          Process.new(GIT, ["diff", "--no-index", "--", out_path, "-"], shell: true, input: r, output: Process::Redirect::Inherit, error: Process::Redirect::Inherit).wait
         elsif !DIFF.empty?
-          Process.new(DIFF, ["-u", out_path, "-"], shell: true, input: r, output: true, error: true).wait
+          Process.new(DIFF, ["-u", out_path, "-"], shell: true, input: r, output: Process::Redirect::Inherit, error: Process::Redirect::Inherit).wait
         else
           STDOUT.puts "No diff command is installed."
         end

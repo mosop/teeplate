@@ -3,8 +3,7 @@ workflows:
   version: 2
   test:
     jobs:
-    # - test_crystal_0_24_2
-    - test_crystal_nightly
+    - test_crystal_0_24_2
 jobs:
   test_crystal_0_24_2:
     docker:
