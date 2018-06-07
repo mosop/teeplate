@@ -2,7 +2,7 @@
 
 A Crystal library for rendering multiple template files.
 
-[![Build Status](https://travis-ci.org/mosop/teeplate.svg?branch=master)](https://travis-ci.org/mosop/teeplate)
+[![CircleCI](https://circleci.com/gh/mosop/teeplate.svg?style=shield)](https://circleci.com/gh/mosop/teeplate)
 
 ## Installation
 
