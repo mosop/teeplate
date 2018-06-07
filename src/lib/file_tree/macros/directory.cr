@@ -2,10 +2,8 @@ require "base64"
 
 def each_file(abs, rel, &block : String, String ->)
   Dir.open(abs) do |d|
-    d.each do |entry|
-      if entry != "." && entry != ".."
-        each_file abs, rel, entry, &block
-      end
+    d.each_child do |entry|
+      each_file abs, rel, entry, &block
     end
   end
 end
@@ -32,14 +30,14 @@ def pack_ecr(i, sb, abs, rel)
   STDOUT << <<-EOS
   \nio = IO::Memory.new
   __ecr#{i} io
-  ____files << ::Teeplate::StringData.new("#{rel}", io.to_s, #{File.stat(abs).perm})
+  ____files << ::Teeplate::StringData.new("#{rel}", io.to_s, File::Permissions.from_value(#{File.info(abs).permissions.value}))
   EOS
 end
 
 def pack_blob(sb, abs, rel)
   STDOUT << "\n____files << ::Teeplate::Base64Data.new(\"#{rel}\", "
   io = IO::Memory.new
-  File.open(abs){|f| IO.copy(f, io)}
+  File.open(abs) { |f| IO.copy(f, io) }
   if io.size > 0
     STDOUT << "#{io.size}_u64, <<-EOS\n"
     Base64.encode io, STDOUT
@@ -47,7 +45,7 @@ def pack_blob(sb, abs, rel)
   else
     STDOUT << "0_u64, \"\""
   end
-  STDOUT << ", #{File.stat(abs).perm})"
+  STDOUT << ", File::Permissions.from_value(#{File.info(abs).permissions.value}))"
 end
 
 STDOUT << "def ____collect_files(____files)"

@@ -5,11 +5,11 @@ module Teeplate
     getter path : String
     getter size : UInt64
     getter encoded : String
-    getter perm : UInt32
+    getter perm : File::Permissions
     getter? forces : Bool
 
-    def initialize(@path, @size, @encoded, perm : Int::Primitive = 0o644, force = false)
-      @perm = perm.to_u32
+    def initialize(@path, @size, @encoded, perm : File::Permissions = File::Permissions.from_value(0o644), force = false)
+      @perm = perm
       @forces = force
     end
 
