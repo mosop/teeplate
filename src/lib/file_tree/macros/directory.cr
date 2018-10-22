@@ -39,13 +39,16 @@ def pack_blob(sb, abs, rel)
   io = IO::Memory.new
   File.open(abs) { |f| IO.copy(f, io) }
   if io.size > 0
-    STDOUT << "#{io.size}_u64, <<-EOS\n"
-    Base64.encode io, STDOUT
-    STDOUT << "EOS\n"
+    STDOUT << "#{io.size}_u64, <<-EOS"
   else
     STDOUT << "0_u64, \"\""
   end
-  STDOUT << ", File::Permissions.from_value(#{File.info(abs).permissions.value}))"
+  STDOUT << ", File::Permissions.from_value(#{File.info(abs).permissions.value}))\n"
+
+  if io.size > 0
+    Base64.encode io, STDOUT
+    STDOUT << "EOS\n"
+  end
 end
 
 STDOUT << "def ____collect_files(____files)"
