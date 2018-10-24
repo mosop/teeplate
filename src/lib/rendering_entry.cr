@@ -198,19 +198,33 @@ module Teeplate
     def diff
       r, w = IO.pipe
       future do
-        @data.write_to w
-        w.close
+        begin
+          @data.write_to w
+        ensure
+          w.close
+        end
+      end
+      r2, w2 = IO.pipe
+      future do
+        begin
+          r2.each_byte do |n|
+            STDOUT.write_byte n
+          end
+        ensure
+          r2.close
+        end
       end
       begin
         if !GIT.empty?
-          Process.new(GIT, ["diff", "--no-index", "--", out_path, "-"], shell: true, input: r, output: Process::Redirect::Inherit, error: Process::Redirect::Inherit).wait
+          Process.new(GIT, ["diff", "--no-index", "--", out_path, "-"], shell: true, input: r, output: w2, error: Process::Redirect::Inherit).wait
         elsif !DIFF.empty?
-          Process.new(DIFF, ["-u", out_path, "-"], shell: true, input: r, output: Process::Redirect::Inherit, error: Process::Redirect::Inherit).wait
+          Process.new(DIFF, ["-u", out_path, "-"], shell: true, input: r, output: w2, error: Process::Redirect::Inherit).wait
         else
-          STDOUT.puts "No diff command is installed."
+          w2.puts "No diff command is installed."
         end
       ensure
         r.close
+        w2.close
       end
     end
   end
