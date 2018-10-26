@@ -6,7 +6,7 @@ workflows:
     - test_crystal_0_26_1
     # - test_crystal_nightly
 jobs:
-  test_crystal_0_24_2:
+  test_crystal_0_26_1:
     docker:
     - image: 'crystallang/crystal:0.26.1'
     working_directory: ~/repo
