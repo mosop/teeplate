@@ -47,7 +47,7 @@ def pack_blob(sb, abs, rel)
 
   if io.size > 0
     Base64.encode io, STDOUT
-    STDOUT << "EOS\n"
+    STDOUT << "EOS"
   end
 end
 

@@ -6,6 +6,6 @@ module TeeplateFixSpec0015
   end
 
   it name do
-    test.should eq "def ____collect_files(____files)\n____files << ::Teeplate::Base64Data.new(\"blob\", 1_u64, <<-EOS, File::Permissions.from_value(420))\nMA==\nEOS\n\nend"
+    test.should eq "def ____collect_files(____files)\n____files << ::Teeplate::Base64Data.new(\"blob\", 1_u64, <<-EOS, File::Permissions.from_value(420))\nMA==\nEOS\nend"
   end
 end
