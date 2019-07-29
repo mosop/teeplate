@@ -13,12 +13,12 @@ module Teeplate
       @forces = force
     end
 
-    def size?
+    def size? : UInt64
       @size
     end
 
-    def perm?
-      @perm
+    def perm? : UInt16
+      @perm.value.to_u16
     end
 
     def write_to(io : IO)
