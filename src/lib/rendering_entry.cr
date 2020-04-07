@@ -76,6 +76,8 @@ module Teeplate
       when :keep
         set_perm
         list_if_any "skipped   ", :yellow
+      else
+        # TODO action could be changed to an enum
       end
     end
 
@@ -190,6 +192,8 @@ module Teeplate
           return :keep
         when "q"
           raise Quit.new
+        else
+          # next
         end
       end
     end
