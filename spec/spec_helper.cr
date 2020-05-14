@@ -1,4 +1,5 @@
 require "spec"
+require "future"
 require "have_files/spec/dsl"
 require "../src/teeplate"
 
