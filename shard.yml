@@ -6,6 +6,11 @@ authors:
 
 crystal: 0.26.1
 
+dependencies:
+  future:
+    github: crystal-community/future.cr
+    version: ~> 0.1.0
+
 development_dependencies:
   have_files:
     github: mosop/have_files

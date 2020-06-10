@@ -1,3 +1,5 @@
+require "future"
+
 module Teeplate
   class RenderingEntry
     # :nodoc:
