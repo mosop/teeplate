@@ -8,6 +8,12 @@ module Teeplate
       {{ run(__DIR__ + "/file_tree/macros/directory", dir.id) }}
     end
 
+    macro directories(list_of_dirs)
+      {% for dir in list_of_dirs %}
+        {{ run(__DIR__ + "/file_tree/macros/directory", dir.id) }}
+      {% end %}
+    end
+
     @file_entries : Array(AsDataEntry)?
     # Returns collected file entries.
     def file_entries : Array(AsDataEntry)
