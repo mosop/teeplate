@@ -4,7 +4,7 @@ module TeeplateFileTreeTemplateFeature
   extend HaveFiles::Spec::Dsl
 
   class Template < Teeplate::FileTree
-    directory "#{__DIR__}/../../test/file_tree_template/template"
+    directories ["#{__DIR__}/../../test/file_tree_template/template"]
 
     @file : String
     @class : String
