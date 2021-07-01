@@ -1,15 +1,15 @@
 name: teeplate
-version: 0.10.1
+version: 0.10.2
 
 authors:
   - mosop
 
-crystal: 0.26.1
+crystal: ">= 0.26.1"
 
 dependencies:
   future:
     github: crystal-community/future.cr
-    version: ~> 0.1.0
+    version: ~> 1.0.0
 
 development_dependencies:
   have_files:
